@@ -1,10 +1,11 @@
 #!/bin/bash
 
 if [ -f /.plugin_setup ]; then
+	echo "Plugins already setup, /.plugin_setup file exists"
 	exit 0
 fi
 
-echo "Setting up plugins"
+echo "Initialized plugin setup"
 
 FLUENT_CONF_FILE=/fluentd/etc/fluent.conf
 
@@ -16,7 +17,7 @@ ES_PORT=${ES_PORT:-$DEFAULT_PORT}
 ES_INDEX=${ES_INDEX:-fluentd}
 ES_TYPE=${ES_TYPE:-fluentd}
 
-PATTERN=${MATCH_PATTERN:-docker.**}
+MATCH_PATTERN=${MATCH_PATTERN:-docker.**}
 
 echo "
 <filter $MATCH_PATTERN>
@@ -40,4 +41,4 @@ echo "
 
 touch /.plugin_setup
 
-echo "Setting up plugins on file $FLUENT_CONF_FILE"
+echo "Finished setting up plugins on file $FLUENT_CONF_FILE"
