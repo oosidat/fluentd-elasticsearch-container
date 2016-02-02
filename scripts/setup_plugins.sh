@@ -39,6 +39,11 @@ echo "
   include_tag_key true
 </match>" >> $FLUENT_CONF_FILE
 
+echo "
+<match **>
+  type stdout
+</match>" >> $FLUENT_CONF_FILE
+
 touch /.plugin_setup
 
 echo "Finished setting up plugins on file $FLUENT_CONF_FILE"
