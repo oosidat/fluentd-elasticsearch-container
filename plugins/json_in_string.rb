@@ -12,16 +12,21 @@ module Fluent
         @time_parser = TimeParser.new(@time_format)
       end
 
-      # This is the main method. The input "text" is the unit of data to be parsed.
+      # This is the main method. The input is the unit of data to be parsed.
       # If this is the in_tail plugin, it would be a line. If this is for in_syslog,
       # it is a single syslog message.
-      def parse(text)
+      def parse(input)
         begin
-          hash = JSON.parse(text)
-          time = @time_parser.parse(hash['time'])
-          yield time, hash
+          if input.is_a?(Hash)
+            time = @time_parser.parse(input['time'])
+            yield time, input
+          else
+            hash = JSON.parse(input)
+            time = @time_parser.parse(hash['time'])
+            yield time, hash
+          end
         rescue
-          yield text
+          yield input
         end
       end
     end
