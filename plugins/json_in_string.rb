@@ -17,14 +17,9 @@ module Fluent
       # it is a single syslog message.
       def parse(input)
         begin
-          if input.is_a?(Hash)
-            time = @time_parser.parse(input['time'])
-            yield time, input
-          else
-            hash = JSON.parse(input)
-            time = @time_parser.parse(hash['time'])
-            yield time, hash
-          end
+          output = (input.is_a?(Hash)) ? (input) : (JSON.parse(input))
+          time = @time_parser.parse(output['time'])
+          yield time, output
         rescue
           yield input
         end
