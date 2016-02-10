@@ -1,4 +1,5 @@
 require 'json'
+require 'time'
 
 module Fluent
   class TextParser
@@ -18,7 +19,9 @@ module Fluent
       def parse(input)
         begin
           output = (input.is_a?(Hash)) ? (input) : (JSON.parse(input))
-          time = @time_parser.parse(output['time'])
+          t = output['time']
+          t = Time.now.strftime(@time_format) if t.nil?
+          time = @time_parser.parse(t)
           yield time, output
         rescue
           yield input
