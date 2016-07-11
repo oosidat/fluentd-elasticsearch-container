@@ -36,6 +36,7 @@ echo "
   port $ES_PORT
   index_name $ES_INDEX
   type_name $ES_TYPE
+  time_key_format %Y-%m-%dT%H:%M:%S.%N%z
   include_tag_key true
 </match>" >> $FLUENT_CONF_FILE
 
