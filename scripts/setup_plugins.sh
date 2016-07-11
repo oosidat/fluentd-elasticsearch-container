@@ -44,6 +44,13 @@ echo "
   type stdout
 </match>" >> $FLUENT_CONF_FILE
 
+echo "
+<source> 
+  @type monitor_agent 
+  bind 0.0.0.0 
+  port 24220 
+</source>" >> $FLUENT_CONF_FILE
+
 touch /.plugin_setup
 
 echo "Finished setting up plugins on file $FLUENT_CONF_FILE"
