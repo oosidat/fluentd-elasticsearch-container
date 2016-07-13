@@ -18,38 +18,49 @@ ES_INDEX=${ES_INDEX:-fluentd}
 ES_TYPE=${ES_TYPE:-fluentd}
 
 MATCH_PATTERN=${MATCH_PATTERN:-docker.**}
+# Clear the origin fluentd.conf
+> $FLUENT_CONF_FILE
+# Export new config
+echo "
+<source>
+  @type  forward
+  @id    input1
+  port  24224
+</source>
+" >> $FLUENT_CONF_FILE
 
 echo "
 <filter $MATCH_PATTERN>
   type parser
-  format json
-  time_format %Y-%m-%dT%H:%M:%S.%L%Z
+  format rails_log_to_time
+  time_format %Y-%m-%dT%H:%M:%S.%N
   key_name log
-  hash_value_field log
+  reserve_data yes
+  hash_value_field @timestamp
 </filter>" >> $FLUENT_CONF_FILE
 
 echo "
-<match $MATCH_PATTERN>
-  type elasticsearch
-  logstash_format true
-  host $ES_HOST
-  port $ES_PORT
-  index_name $ES_INDEX
-  type_name $ES_TYPE
-  time_key_format %Y-%m-%dT%H:%M:%S.%N%z
-  include_tag_key true
+<match **.*>
+  @type copy
+  <store>
+    @type stdout
+  </store>
+  <store>
+    @type elasticsearch
+    host $ES_HOST
+    port $ES_PORT
+    logstash_format true
+    index_name $ES_INDEX
+    type_name $ES_TYPE
+    time_key_format %Y-%m-%dT%H:%M:%S.%N
+  </store>
 </match>" >> $FLUENT_CONF_FILE
 
 echo "
-<match **>
-  type stdout
-</match>" >> $FLUENT_CONF_FILE
-
-echo "
-<source> 
-  @type monitor_agent 
-  bind 0.0.0.0 
-  port 24220 
+<source>
+  @type monitor_agent
+  bind 0.0.0.0
+  port 24220
 </source>" >> $FLUENT_CONF_FILE
 
 touch /.plugin_setup
