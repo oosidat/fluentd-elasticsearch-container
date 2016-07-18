@@ -30,7 +30,7 @@ echo "
 " >> $FLUENT_CONF_FILE
 
 echo "
-<filter $MATCH_PATTERN>
+<filter *end>
   type parser
   format rails_log_to_time
   time_format %Y-%m-%dT%H:%M:%S.%N
@@ -53,6 +53,7 @@ echo "
     index_name $ES_INDEX
     type_name $ES_TYPE
     time_key_format %Y-%m-%dT%H:%M:%S.%N
+		include_tag_key true
   </store>
 </match>" >> $FLUENT_CONF_FILE
 
@@ -66,3 +67,5 @@ echo "
 touch /.plugin_setup
 
 echo "Finished setting up plugins on file $FLUENT_CONF_FILE"
+
+curl -XPUT $ES_HOST:$ES_PORT/_template/template_logstash -d@elasticsearch-fluentd-template.json
