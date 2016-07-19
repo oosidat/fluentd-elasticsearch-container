@@ -1,0 +1,24 @@
+{
+  "template": "logstash-*",
+  "settings": {
+    "index.refresh_interval": "5s"
+  },
+  "mappings": {
+    "_default_": {
+      "_all": { "enabled": true },
+      "properties" : {
+        "@timestamp": { "type": "date", "index": "not_analyzed" },
+        "message": { "type": "string", "index": "analyzed" },
+        "log": { "type": "string", "index": "not_analyzed" },
+        "container_name": { "type": "string", "index": "not_analyzed" },
+        "container_id": { "type": "string", "index": "not_analyzed" },
+        "source": { "type": "string", "index": "not_analyzed" },
+        "message": { "type": "string", "index": "not_analyzed" },
+        "tag": { "type": "string", "index": "not_analyzed" },
+        "record": { "type": "string", "index": "not_analyzed" },
+        "error": { "type": "string", "index": "not_analyzed" },
+        "error_class": { "type": "string", "index": "not_analyzed" }
+      }
+    }
+  }
+}
