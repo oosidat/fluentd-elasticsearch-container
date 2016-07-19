@@ -17,7 +17,7 @@ module Fluent
       # it is a single syslog message.
       def parse(input)
         begin
-          output = /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).(\d{6})/.match(input).to_s
+          output = /\[(\d{4})-(\d{2})-(\d{2})( |T)*(\d{2}):(\d{2}):(\d{2}).(\d{3,})/.match(input).to_s
           time = @time_parser.parse(output)
           yield time, output
         rescue
